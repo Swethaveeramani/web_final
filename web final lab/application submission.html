@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {margin:0;font-family:Arial}
+
+.topnav {
+  overflow: hidden;
+  background-color: cadetblue;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.active {
+  background-color: pink;
+  color:black;
+}
+
+.topnav .icon {
+  display: none;
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 17px;    
+  border: none;
+  outline: none;
+  color: black;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color:rgb(105, 208, 249);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.topnav a:hover, .dropdown:hover .dropbtn {
+  background-color: pink;
+  color: skyblue;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child), .dropdown .dropbtn {
+    display: none;
+  }
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .topnav.responsive {position: relative;}
+  .topnav.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+  .topnav.responsive .dropdown {float: none;}
+  .topnav.responsive .dropdown-content {position: relative;}
+  .topnav.responsive .dropdown .dropbtn {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+}
+</style>
+	<title>Application Submission Form</title>
+</head>
+<body>
+	<body background="https://www.seramporecollegecomputercentre.in/assets/img/placement.jpg" style="image-resolution: 720dpi;background-repeat: no-repeat;background-size: cover;"></body>
+  <div class="topnav" id="myTopnav">
+    <a href="home.html" class="active">HOME</a></i>
+    <a href="s.html">ADD PLACEMENT DETAILS</a></i>
+    <a href="DEPARTMENT.html">COMPANY</a>
+    <a href="job posting.html">AVAILABLE JOB</a>
+  </div>
+<center>
+	<h1>Application Submission Form</h1>
+	<form id="application-form" method="post" enctype="multipart/form-data">
+		<label for="name">Name:</label>
+		<input type="text" id="name" name="name" required><br><br>
+
+		<label for="email">Email:</label>
+		<input type="email" id="email" name="email" required><br><br>
+
+		<label for="phone">Phone:</label>
+		<input type="tel" id="phone" name="phone" required><br><br>
+
+		<label for="resume">Resume:</label>
+		<input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required><br><br>
+
+		<button type="submit" id="submit-btn">Submit</button>
+	</form>
+	<div id="message"></div>
+<script>
+$(document).ready(function() {
+	$("#application-form").on("submit", function(event) {
+		event.preventDefault();
+		var form_data = new FormData($(this)[0]);
+		$.ajax({
+			url: "submit.php",
+			type: "POST",
+			data: form_data,
+			contentType: false,
+			processData: false,
+			success: function(response) {
+				$("#message").html(response);
+			},
+			error: function() {
+				$("#message").html("Error submitting application");
+			}
+		});
+	});
+});
+<?php
+// Retrieve form data
+$name = $_POST['name'];
+$email = $_POST['email'];
+$phone = $_POST['phone'];
+$resume = $_FILES['resume']['name'];
+
+// Connect to database
+$host = 'localhost';
+$dbname = 'mydb';
+$username = 'myuser';
+$password = 'mypassword';
+
+try {
+	$conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	// Prepare SQL statement
+	$stmt = $conn->prepare("INSERT INTO applications (name, email, phone, resume) VALUES (:name, :email, :phone, :resume)");
+
+	// Bind parameters to SQL statement
+	$stmt->bindParam(':name', $name);
+	$stmt->bindParam(':email', $email);
+	$stmt->bindParam(':phone', $phone);
+	$stmt->bindParam(':resume', $resume);
+
+	// Execute SQL statement
+	$stmt->execute();
+
+	echo "Application submitted successfully!";
+} catch(PDOException $e) {
+	echo "Error: " . $e->getMessage();
+}
+
+$conn = null;
+// Prepare SQL statement
+$stmt = $conn->prepare("INSERT INTO mytable (field1, field2, field3) VALUES (:val1, :val2, :val3)");
+
+// Bind parameters to SQL statement
+$stmt->bindParam(':val1', $val1);
+$stmt->bindParam(':val2', $val2);
+$stmt->bindParam(':val3', $val3);
+
+// Set parameter values
+$val1 = "some value";
+$val2 = 123;
+$val3 = "another value";
+
+// Execute SQL statement
+$stmt->execute();
+
+</script>
+
+</body>
+</html>

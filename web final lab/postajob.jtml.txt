@@ -1,0 +1,64 @@
+<html>
+<body>
+<form id="job-posting-form">
+  <label for="job-title">Job Title:</label>
+  <input type="text" id="job-title" name="job-title"><br><br>
+
+  <label for="job-description">Job Description:</label>
+  <textarea id="job-description" name="job-description"></textarea><br><br>
+
+  <label for="job-type">Job Type:</label>
+  <select id="job-type" name="job-type">
+    <option value="full-time">Full-time</option>
+    <option value="part-time">Part-time</option>
+    <option value="contract">Contract</option>
+  </select><br><br>
+
+  <label for="job-location">Location:</label>
+  <input type="text" id="job-location" name="job-location"><br><br>
+
+  <label for="application-deadline">Application Deadline:</label>
+  <input type="date" id="application-deadline" name="application-deadline"><br><br>
+
+  <button type="submit">Post Job</button>
+</form>
+<script>
+function postJob() {
+  const jobTitle = document.getElementById("job-title").value;
+  const jobDescription = document.getElementById("job-description").value;
+  const jobType = document.getElementById("job-type").value;
+  const jobLocation = document.getElementById("job-location").value;
+  const applicationDeadline = document.getElementById("application-deadline").value;
+
+  const jobPosting = {
+    title: jobTitle,
+    description: jobDescription,
+    type: jobType,
+    location: jobLocation,
+    deadline: applicationDeadline
+  };
+
+ function postJob() {
+  // Code to get job posting object from form inputs
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/post-job");
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      console.log("Job posted successfully");
+    } else {
+      console.log("Job posting failed");
+    }
+  };
+  xhr.send(JSON.stringify(jobPosting));
+}
+
+}
+const form = document.getElementById("job-posting-form");
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+  postJob();
+});
+</body>
+</html>
